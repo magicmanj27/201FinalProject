@@ -10,13 +10,16 @@ function handleLoginSubmit(event){
   console.log(PassId);
   console.log(UserId);
 
-  if (UserId === 'me' && PassId === '1') {
+  if (UserId === 'Username' && PassId === 'Pa$$word') {
     window.location.replace('dashboard.html');
   } else {
-    alert('Bi');
+    alert('Wrong Password');
   }
 }
 
 
 
 loginForm.addEventListener('submit', handleLoginSubmit);
+
+
+
