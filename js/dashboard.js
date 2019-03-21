@@ -20,6 +20,10 @@ var budgetController = (function() {
     return this.percentage;
   };
 
+  Expense.prototype.getDescription = function() {
+    return this.description;
+  };
+
   var Income = function(id, description, value) {
     this.id = id;
     this.description = description;
@@ -114,6 +118,15 @@ var budgetController = (function() {
         return cur.getPercentage();
       });
       return allPerc;
+    },
+
+    getDescriptions: function() {
+      var expDes = data.allItems.exp.map(function(cur) {
+
+        return cur.getDescription();
+      });
+
+      return expDes;
     },
 
     getBudget: function() {
@@ -289,6 +302,8 @@ var UIController = (function() {
 
 //GLOBAL APP CONTROLLER
 var controller = (function(budgetCtrl, UICtrl) {
+
+
   var setupEventListeners = function() {
     var DOM = UICtrl.getDOMstrings();
 
@@ -324,13 +339,43 @@ var controller = (function(budgetCtrl, UICtrl) {
     budgetCtrl.calculatePercentages();
     // 2. Read percentages from the budget controller
     var percentages = budgetCtrl.getPercentages();
-    console.log(percentages); // Potential starting point for making chart
+    // console.log(percentages); // Potential starting point for making charts
     // 3. Update the UI with the new percentages
     UICtrl.displayPercentages(percentages);
+    return percentages;
   };
 
+  var makeChart = function() {
+    var chartPercentages, chartDescriptions, chartInput, chartItem, chartDes;
+    // var storeDesArray = [];
+
+    // chartInput = UICtrl.getInput();
+
+    // chartItem = budgetCtrl.addItem(chartInput.type, chartInput.description, chartInput.value);
+
+
+    // if (chartInput.type === 'exp') {
+    //   storeDesArray.push(chartInput.description);
+    // }
+
+
+    chartDescriptions = budgetCtrl.getDescriptions();
+    console.log(chartDescriptions);
+
+    chartPercentages = budgetCtrl.getPercentages();
+    // console.log(chartItem);
+    console.log(chartPercentages);
+    // console.log(storeDesArray);
+  };
+
+
   var ctrlAddItem = function() {
-    var input, newItem;
+    var input, newItem, chartPercentages;
+    // var chartDesNames = [];
+
+    // chartPercentages = budgetCtrl.getPercentages();
+    // console.log(chartPercentages);
+
 
     // 1. Get the field input data
     input = UICtrl.getInput();
@@ -351,7 +396,13 @@ var controller = (function(budgetCtrl, UICtrl) {
       // 6. Calculate and update percentages
       updatePercentages();
 
+      makeChart();
+
     }
+    
+    // chartDesNames.push(newItem.description);
+    // console.log(chartDesNames);
+     
   };
 
   var ctrlDeleteItem = function(event) {
@@ -376,9 +427,31 @@ var controller = (function(budgetCtrl, UICtrl) {
 
       // 4. Calculate and update percentages
       updatePercentages();
+
+      console.log(updatePercentages);
     }
   };
 
+  // var ctx = document.getElementById('myChart').getContext('2d');
+  // var myChart = new Chart(ctx, {
+  //   type: 'pie',
+  //   data: {
+  //     labels: ['Green', 'Blue', 'Gray', 'Purple', 'Yellow', 'Red', 'Black'],
+  //     datasets: [{
+  //       backgroundColor: [
+  //         '#2ecc71',
+  //         '#3498db',
+  //         '#95a5a6',
+  //         '#9b59b6',
+  //         '#f1c40f',
+  //         '#e74c3c',
+  //         '#34495e'
+  //       ],
+  //       data: [12, 19, 3, 17, 28, 24, 7]
+  //     }]
+  //   }
+  // });
+ 
   return {
     init: function() {
       console.log('Application has started.');
@@ -395,3 +468,25 @@ var controller = (function(budgetCtrl, UICtrl) {
 })(budgetController, UIController);
 
 controller.init();
+
+
+// var ctx = document.getElementById("myChart").getContext('2d');
+// var myChart = new Chart(ctx, {
+//   type: 'pie',
+//   data: {
+//     labels: ["Green", "Blue", "Gray", "Purple", "Yellow", "Red", "Black"],
+//     datasets: [{
+//       backgroundColor: [
+//         "#2ecc71",
+//         "#3498db",
+//         "#95a5a6",
+//         "#9b59b6",
+//         "#f1c40f",
+//         "#e74c3c",
+//         "#34495e"
+//       ],
+//       data: [12, 19, 3, 17, 28, 24, 7]
+//     }]
+//   }
+// });
+
