@@ -138,6 +138,11 @@ var budgetController = (function() {
       };
     },
 
+    getIncome: function() {
+      var income = data.totals.inc;
+      return income;
+    },
+
     testing: function() {
       console.log(data);
     }
@@ -346,17 +351,10 @@ var controller = (function(budgetCtrl, UICtrl) {
   };
 
   var makeChart = function() {
-    var chartPercentages, chartDescriptions, chartInput, chartItem, chartDes;
-    // var storeDesArray = [];
+    var chartPercentages, chartDescriptions, chartRange;
 
-    // chartInput = UICtrl.getInput();
-
-    // chartItem = budgetCtrl.addItem(chartInput.type, chartInput.description, chartInput.value);
-
-
-    // if (chartInput.type === 'exp') {
-    //   storeDesArray.push(chartInput.description);
-    // }
+    chartRange = budgetCtrl.getIncome();
+    console.log(chartRange);
 
 
     chartDescriptions = budgetCtrl.getDescriptions();
@@ -366,6 +364,30 @@ var controller = (function(budgetCtrl, UICtrl) {
     // console.log(chartItem);
     console.log(chartPercentages);
     // console.log(storeDesArray);
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels:chartDescriptions,
+        datasets: [{
+          backgroundColor: [
+            '#2ecc71',
+            // '#3498db',
+            // '#95a5a6',
+            // '#9b59b6',
+            // '#f1c40f',
+            // '#e74c3c',
+            // '#34495e'
+          ],
+          data: chartPercentages
+        }]
+      }
+    });
+
+
+
+
   };
 
 
@@ -399,10 +421,10 @@ var controller = (function(budgetCtrl, UICtrl) {
       makeChart();
 
     }
-    
+
     // chartDesNames.push(newItem.description);
     // console.log(chartDesNames);
-     
+
   };
 
   var ctrlDeleteItem = function(event) {
@@ -451,7 +473,7 @@ var controller = (function(budgetCtrl, UICtrl) {
   //     }]
   //   }
   // });
- 
+
   return {
     init: function() {
       console.log('Application has started.');
