@@ -138,9 +138,19 @@ var budgetController = (function() {
       };
     },
 
-    getIncome: function() {
-      var income = data.totals.inc;
-      return income;
+    getChartExp: function() {
+      var chartExp = data.totals.exp;
+      return chartExp;
+    },
+
+    getChatInc: function() {
+      var chartInc = data.totals.inc;
+      return chartInc;
+    },
+
+    getchartBudet: function() {
+      var budget = data.budget;
+      return budget;
     },
 
     testing: function() {
@@ -351,46 +361,59 @@ var controller = (function(budgetCtrl, UICtrl) {
   };
 
   var makeChart = function() {
-    var chartPercentages, chartDescriptions, chartRange;
+    var chartPercentages, chartDescriptions, inc, exp, total;
 
-    chartRange = budgetCtrl.getIncome();
-    console.log(chartRange);
+    var shit = [];
+    console.log(shit);
+    var newDesc = ['Income'];
+    console.log(newDesc);
 
+    inc = budgetCtrl.getChatInc();
+    exp = budgetCtrl.getChartExp();
+
+    total = 100 - ((exp * 100) / inc);
+
+    shit.push(total);
 
     chartDescriptions = budgetCtrl.getDescriptions();
     console.log(chartDescriptions);
 
     chartPercentages = budgetCtrl.getPercentages();
-    // console.log(chartItem);
     console.log(chartPercentages);
-    // console.log(storeDesArray);
+
+    for(var i = 0; i < chartPercentages.length; i++) {
+      shit.push(chartPercentages[i]);
+    }
+
+    for(var j = 0; j < chartDescriptions.length; j++) {
+      newDesc.push(chartDescriptions[j]);
+    }
 
     var ctx = document.getElementById('myChart').getContext('2d');
     var myChart = new Chart(ctx, {
       type: 'pie',
       data: {
-        labels:chartDescriptions,
+        // startAngle: chartRange,
+        labels:newDesc,
         datasets: [{
           backgroundColor: [
             '#2ecc71',
-            // '#3498db',
-            // '#95a5a6',
-            // '#9b59b6',
-            // '#f1c40f',
-            // '#e74c3c',
-            // '#34495e'
+            '#3498db',
+            '#95a5a6',
+            '#9b59b6',
+            '#f1c40f',
+            '#e74c3c',
+            '#34495e'
           ],
-          data: chartPercentages
+          data: shit,
         }]
       }
     });
-
-
-
-
   };
 
-
+  // var x = {
+  //   labe
+  // }
   var ctrlAddItem = function() {
     var input, newItem, chartPercentages;
     // var chartDesNames = [];
@@ -419,60 +442,37 @@ var controller = (function(budgetCtrl, UICtrl) {
       updatePercentages();
 
       makeChart();
-
     }
-
-    // chartDesNames.push(newItem.description);
-    // console.log(chartDesNames);
-
   };
 
   var ctrlDeleteItem = function(event) {
     var itemID, splitID, type, ID;
 
+    
     itemID = event.target.parentNode.parentNode.parentNode.parentNode.id;
-
+    
     if(itemID) {
-
+      
       splitID = itemID.split('-');
       type = splitID[0];
       ID = parseInt(splitID[1]);
-
+      
       // 1. delete the item from the data structure
       budgetCtrl.deletItem(type, ID);
-
+      
       // 2. Delete the item from the UI
       UICtrl.deleteListItem(itemID);
-
+      
       // 3. Update and show the new budget
       updateBudget();
-
+      
       // 4. Calculate and update percentages
       updatePercentages();
-
+      
+      makeChart();
       console.log(updatePercentages);
     }
   };
-
-  // var ctx = document.getElementById('myChart').getContext('2d');
-  // var myChart = new Chart(ctx, {
-  //   type: 'pie',
-  //   data: {
-  //     labels: ['Green', 'Blue', 'Gray', 'Purple', 'Yellow', 'Red', 'Black'],
-  //     datasets: [{
-  //       backgroundColor: [
-  //         '#2ecc71',
-  //         '#3498db',
-  //         '#95a5a6',
-  //         '#9b59b6',
-  //         '#f1c40f',
-  //         '#e74c3c',
-  //         '#34495e'
-  //       ],
-  //       data: [12, 19, 3, 17, 28, 24, 7]
-  //     }]
-  //   }
-  // });
 
   return {
     init: function() {
